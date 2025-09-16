@@ -29,14 +29,14 @@ type Quiz {
   }
 
   type SectionResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: Section
   }
 
   type SectionListResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: [Section]

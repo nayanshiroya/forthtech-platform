@@ -10,14 +10,14 @@ const indexTypeDefs = gql`
   }
 
   type IndexResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: Index
   }
 
   type IndexListResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: [Index]

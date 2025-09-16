@@ -11,8 +11,8 @@ export const indexResolver = {
     ) => {
       try {
         const indexes = await Index.find({ categoryId }).lean();
-        if (!indexes || indexes.length === 0) {
-          return errorResponse("No indexes found for this category");
+          if (!indexes || indexes.length === 0) {
+            return errorResponse("No indexes found for this category", undefined, 404);
         }
 
         const mappedIndexes = indexes.map((i) => ({
@@ -20,9 +20,9 @@ export const indexResolver = {
           id: i._id.toString(),
         }));
 
-        return successResponse(mappedIndexes, "Indexes fetched successfully");
+        return successResponse(mappedIndexes, "Indexes fetched successfully",200);
       } catch (err) {
-        return errorResponse("Internal server error", err);
+    return errorResponse("Internal server error", err, 500);
       }
     },
 
@@ -30,14 +30,14 @@ export const indexResolver = {
     index: async (_: any, { id }: { id: string }) => {
       try {
         const index = await Index.findById(id).lean();
-        if (!index) {
-          return errorResponse("Index not found");
+          if (!index) {
+            return errorResponse("Index not found", undefined, 404);
         }
 
         const mappedIndex = { ...index, id: index._id.toString() };
-        return successResponse(mappedIndex, "Index fetched successfully");
+        return successResponse(mappedIndex, "Index fetched successfully",200);
       } catch (err) {
-        return errorResponse("Internal server error", err);
+    return errorResponse("Internal server error", err, 500);
       }
     },
   },
@@ -46,14 +46,16 @@ export const indexResolver = {
     createIndex: withAuth(async (_: any, { name, description, categoryId }: any, context: any) => {
       try {
         const categoryExists = await Category.findById(categoryId);
-        if (!categoryExists) {
-          return errorResponse("Invalid categoryId");
+          if (!categoryExists) {
+            return errorResponse("Invalid categoryId", undefined, 400);
         }
         const existingIndex = await Index.findOne({ name, categoryId });
         if (existingIndex) {
-          return errorResponse(
-            "Index with this name already exists in the same category"
-          );
+            return errorResponse(
+              "Index with this name already exists in the same category",
+              undefined,
+              409
+            );
         }
 
         const index: any = await Index.create({
@@ -63,9 +65,9 @@ export const indexResolver = {
         });
         const mappedIndex = { ...index.toObject(), id: index._id.toString() };
 
-        return successResponse(mappedIndex, "Index created successfully");
+        return successResponse(mappedIndex, "Index created successfully",200);
       } catch (err) {
-        return errorResponse("Failed to create index", err);
+    return errorResponse("Failed to create index", err, 500);
       }
     }),
 
@@ -78,9 +80,11 @@ export const indexResolver = {
             _id: { $ne: id }, // exclude the index being updated
           });
           if (duplicate) {
-            return errorResponse(
-              "Another index with this name already exists in the same category",
-            );
+              return errorResponse(
+                "Another index with this name already exists in the same category",
+                undefined,
+                409
+              );
           }
         }
 
@@ -90,28 +94,28 @@ export const indexResolver = {
           { new: true }
         );
 
-        if (!index) {
-          return errorResponse("Index not found");
+          if (!index) {
+            return errorResponse("Index not found", undefined, 404);
         }
 
         const mappedIndex = { ...index.toObject(), id: index._id.toString() };
 
-        return successResponse(mappedIndex, "Index updated successfully");
+        return successResponse(mappedIndex, "Index updated successfully",200);
       } catch (err) {
-        return errorResponse("Failed to update index", err);
+    return errorResponse("Failed to update index", err, 500);
       }
     }),
 
     deleteIndex: withAuth(async (_: any, { id }: any, context: any) => {
       try {
         const index: any = await Index.findByIdAndDelete(id);
-        if (!index) {
-          return errorResponse("Index not found");
+          if (!index) {
+            return errorResponse("Index not found", undefined, 404);
         }
         const mappedIndex = { ...index.toObject(), id: index._id.toString() };
-        return successResponse(mappedIndex, "Index deleted successfully");
+        return successResponse(mappedIndex, "Index deleted successfully",200);
       } catch (err) {
-        return errorResponse("Failed to delete index", err);
+          return errorResponse("Failed to delete index", err, 500);
       }
     }),
   },

@@ -11,20 +11,20 @@ const courseTypeDefs = gql`
   type Course {
     id: ID!
     title: String!
-    description: String
+    description: String!
     indexId: ID!
     index: Index
   }
 
   type CourseResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: Course
   }
 
   type CourseListResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: [Course]
@@ -39,7 +39,7 @@ const courseTypeDefs = gql`
   extend type Mutation {
     createCourse(
       title: String!
-      description: String
+      description: String!
       indexId: ID!
     ): CourseResponse
 

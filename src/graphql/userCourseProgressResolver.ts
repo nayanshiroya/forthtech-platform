@@ -21,9 +21,9 @@ export const userCourseProgressResolver = {
           completedSections: completedSections || 0,
           completedSectionsID:progress?.completedSections ||[]
         };
-        return successResponse(responseData, "Progress fetched successfully");
+        return successResponse(responseData, "Progress fetched successfully",200);
       } catch (err) {
-        return errorResponse("Failed to fetch progress", err);
+    return errorResponse("Failed to fetch progress", err, 500);
       }
     },
   },
@@ -40,8 +40,8 @@ export const userCourseProgressResolver = {
           courseId: courseId,
         });
 
-        if (!course) {
-          return errorResponse("Course or section not found");
+          if (!course) {
+            return errorResponse("Course or section not found", undefined, 404);
         }
 
         const progress = await UserCourseProgress.findOne({ userId, courseId });
@@ -53,17 +53,17 @@ export const userCourseProgressResolver = {
             courseId,
             completedSections: [sectionId],
           });
-          return successResponse(newProgress, "Section marked as complete");
+          return successResponse(newProgress, "Section marked as complete",200);
         } else {
           // If section not already marked complete
           if (!progress.completedSections.includes(sectionId)) {
             progress.completedSections.push(sectionId);
             await progress.save();
           }
-          return successResponse(progress, "Section marked as complete");
+          return successResponse(progress, "Section marked as complete",200);
         }
       } catch (err) {
-        return errorResponse("Failed to mark section as complete", err);
+    return errorResponse("Failed to mark section as complete", err, 500);
       }
     },
 
@@ -78,8 +78,8 @@ export const userCourseProgressResolver = {
           courseId: courseId,
         });
 
-        if (!sectionExists) {
-          return errorResponse("Course or section not found");
+          if (!sectionExists) {
+            return errorResponse("Course or section not found", undefined, 404);
         }
 
         // 2. Find and update the user's progress
@@ -89,16 +89,16 @@ export const userCourseProgressResolver = {
           { new: true, lean: true }
         );
 
-        if (!updatedProgress) {
-          return errorResponse("User progress not found");
+          if (!updatedProgress) {
+            return errorResponse("User progress not found", undefined, 404);
         }
 
         return successResponse(
           updatedProgress,
-          "Section unmarked successfully"
+          "Section unmarked successfully",200
         );
       } catch (err) {
-        return errorResponse("Failed to unmark section", err);
+    return errorResponse("Failed to unmark section", err, 500);
       }
     },
   },

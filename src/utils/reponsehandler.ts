@@ -1,6 +1,5 @@
-// src/utils/graphqlResponse.ts
-interface ApiResponse<T> {
-  success: boolean;
+export interface ApiResponse<T> {
+  status: number;
   data?: T;
   message?: string;
   error?: string;
@@ -8,18 +7,20 @@ interface ApiResponse<T> {
 
 export const successResponse = <T>(
   data: T,
-  message: string = "Success"
+  message: string = "Success",
+  status: number = 200
 ): ApiResponse<T> => ({
-  success: true,
+  status,
   data,
   message,
 });
 
 export const errorResponse = (
   message: string = "An error occurred",
-  errorDetails?: any
+  errorDetails?: any,
+  status: number = 500
 ): ApiResponse<any> => ({
-  success: false,
+  status,
   message,
   error: errorDetails ? JSON.stringify(errorDetails) : message,
 });

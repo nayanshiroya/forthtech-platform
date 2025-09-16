@@ -21,6 +21,7 @@ export interface ISection extends Document {
     markdown: string;
     exercises: IExercise[];
     quizzes: IQuiz[];
+    reference: string;
   };
 }
 
@@ -39,7 +40,7 @@ const courseSectionSchema = new Schema<ISection>({
         hint: { type: String },
         solution: { type: String },
       },
-        { _id: true } 
+      { _id: true },
     ],
     quizzes: [
       {
@@ -47,8 +48,9 @@ const courseSectionSchema = new Schema<ISection>({
         options: [{ type: String, required: false }],
         answer: { type: String, required: false },
       },
-        { _id: true } 
+      { _id: true },
     ],
+    reference: { type: String, required: false },
   },
 });
 

@@ -9,7 +9,7 @@ const userCourseProgressTypeDefs = gql`
   }
 
   type UserProgressResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: UserProgress
@@ -22,7 +22,7 @@ type UserProgressData {
 }
 
   type UserProgressListResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: UserProgressData

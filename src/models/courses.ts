@@ -8,7 +8,7 @@ export interface ICourse extends Document {
 
 const courseSchema = new Schema<ICourse>({
   title: { type: String, required: true },
-  description: { type: String },
+  description: { type: String,required: true },
   indexId: { type: mongoose.Schema.Types.ObjectId, ref: "Index", required: true },
 });
 

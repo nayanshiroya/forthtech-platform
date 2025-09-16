@@ -1,22 +1,30 @@
 import { gql } from "apollo-server-express";
 
 const categoryTypeDefs = gql`
+  type User {
+    id: ID!
+    email: String!
+    name: String
+    # Add other user fields as needed
+  }
+
   type Category {
     id: ID!
     name: String!
-    description: String
+    description: String!
     indexes: [Index]
+    created_by: User # The new field to link to the User type
   }
 
   type CategoryResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: Category
   }
 
   type CategoryListResponse {
-    success: Boolean!
+    status: Int!
     message: String
     error: String
     data: [Category]
@@ -28,8 +36,8 @@ const categoryTypeDefs = gql`
   }
 
   extend type Mutation {
-    createCategory(name: String!, description: String): CategoryResponse
-    updateCategory(id: ID!, name: String, description: String): CategoryResponse
+    createCategory(name: String!, description: String!): CategoryResponse
+    updateCategory(id: ID!, name: String, description: String!): CategoryResponse
     deleteCategory(id: ID!): CategoryResponse
   }
 `;

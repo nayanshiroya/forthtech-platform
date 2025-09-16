@@ -8,7 +8,7 @@ export interface IIndex extends Document {
 
 const indexSchema = new Schema<IIndex>({
   name: { type: String, required: true },
-  description: { type: String },
+  description: { type: String ,required: true},
   categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
 });
 
